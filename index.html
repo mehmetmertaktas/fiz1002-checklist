@@ -609,28 +609,18 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
         import { getDatabase, ref, set, onValue, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-        
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        // Firebase Configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyCWAi54-4awvqjY_VQSVjk3BqdQmQyhnrE",
-          authDomain: "fiz1002-checklist.firebaseapp.com",
-          databaseURL: "https://fiz1002-checklist-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "fiz1002-checklist",
-          storageBucket: "fiz1002-checklist.firebasestorage.app",
-          messagingSenderId: "6921656537",
-          appId: "1:6921656537:web:285bda6c181ab8e78786c8",
-          measurementId: "G-YW5Y5L7EMC"
+            apiKey: "AIzaSyCWAi54-4awvqjY_VQSVjk3BqdQmQyhnrE",
+            authDomain: "fiz1002-checklist.firebaseapp.com",
+            databaseURL: "https://fiz1002-checklist-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "fiz1002-checklist",
+            storageBucket: "fiz1002-checklist.firebasestorage.app",
+            messagingSenderId: "6921656537",
+            appId: "1:6921656537:web:285bda6c181ab8e78786c8",
+            measurementId: "G-YW5Y5L7EMC"
         };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
@@ -671,7 +661,7 @@ const analytics = getAnalytics(app);
         let isLoggedIn = false;
 
         // Login handling
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const password = document.getElementById('passwordInput').value;
             
@@ -679,7 +669,19 @@ const analytics = getAnalytics(app);
                 isLoggedIn = true;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').classList.add('show');
-                loadChecklist();
+                
+                // Check if Firebase is configured
+                if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+                    alert('⚠️ Firebase henüz yapılandırılmamış!\n\nLütfen FIREBASE-KURULUM.md dosyasındaki adımları takip edin ve Firebase config bilgilerinizi index.html dosyasına ekleyin.');
+                    // Initialize with empty data for testing
+                    checklistData = {};
+                    tasks.forEach(task => {
+                        checklistData[task.id] = false;
+                    });
+                    renderChecklist();
+                } else {
+                    await loadChecklist();
+                }
             } else {
                 document.getElementById('errorMessage').classList.add('show');
                 setTimeout(() => {
@@ -740,6 +742,13 @@ const analytics = getAnalytics(app);
 
         // Save checklist data to Firebase
         async function saveChecklist() {
+            // Check if Firebase is configured
+            if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+                // If Firebase not configured, just update locally
+                console.log('Firebase not configured, changes not saved');
+                return;
+            }
+            
             showSyncIndicator('syncing');
             const checklistRef = ref(database, 'checklist');
             await set(checklistRef, checklistData);
