@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIZ1002 Sınav Organizasyon Checklist</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --vildan: #9b59b6;
+            --emre: #e67e22;
+            --mert: #16a085;
+            --mesut: #c0392b;
+            --bg: #ecf0f1;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        /* Login Screen */
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .login-container h2 {
+            font-family: 'Space Mono', monospace;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .login-container p {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .login-form button {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        /* Main App */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .container.show {
+            display: block;
+        }
+
+        header {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: fadeInDown 0.5s ease;
+        }
+
+        .header-left h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .header-left .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .progress-text {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 1);
+            transform: translateY(-2px);
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            animation: fadeIn 0.5s ease 0.1s backwards;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .reset-btn:hover {
+            background: rgba(231, 76, 60, 1);
+        }
+
+        .workflow {
+            display: grid;
+            gap: 25px;
+        }
+
+        .phase {
+            animation: fadeInUp 0.5s ease backwards;
+        }
+
+        .phase:nth-child(1) { animation-delay: 0.2s; }
+        .phase:nth-child(2) { animation-delay: 0.3s; }
+        .phase:nth-child(3) { animation-delay: 0.4s; }
+
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .phase-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phase-progress {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .tasks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 15px;
+        }
+
+        .task {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .task.completed {
+            opacity: 0.7;
+            background: #f8f9fa;
+        }
+
+        .task.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .task.vildan { border-left-color: var(--vildan); }
+        .task.emre { border-left-color: var(--emre); }
+        .task.mert { border-left-color: var(--mert); }
+        .task.mesut { border-left-color: var(--mesut); }
+
+        .task-checkbox {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 28px;
+            height: 28px;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .task.completed .task-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .task.completed .task-checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .task-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-right: 40px;
+        }
+
+        .task-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .task.vildan .task-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .task.emre .task-icon { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .task.mert .task-icon { background: linear-gradient(135deg, #16a085, #138d75); }
+        .task.mesut .task-icon { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+        .task-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .task-description {
+            color: var(--text-light);
+            line-height: 1.5;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .task-footer {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .assignee {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .assignee.vildan { background: var(--vildan); }
+        .assignee.emre { background: var(--emre); }
+        .assignee.mert { background: var(--mert); }
+        .assignee.mesut { background: var(--mesut); }
+
+        .note {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+            animation: fadeIn 0.5s ease 0.5s backwards;
+        }
+
+        .note-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .note-content {
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .sync-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .sync-indicator.show {
+            display: block;
+        }
+
+        .sync-indicator.syncing {
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+        }
+
+        .sync-indicator.synced {
+            background: rgba(39, 174, 96, 0.9);
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .progress-container {
+                width: 100%;
+            }
+
+            .progress-bar {
+                width: 100%;
+            }
+
+            .tasks {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .reset-btn {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <h2>🔐 Giriş Yapın</h2>
+        <p>FIZ1002 Sınav Organizasyon Checklist</p>
+        <div class="error-message" id="errorMessage">Hatalı şifre!</div>
+        <form class="login-form" id="loginForm">
+            <input type="password" id="passwordInput" placeholder="Şifre" required autocomplete="current-password">
+            <button type="submit">Giriş Yap</button>
+        </form>
+    </div>
+
+    <!-- Main App -->
+    <div class="container" id="mainApp">
+        <div class="loading" id="loading">Yükleniyor...</div>
+        
+        <header style="display:none;" id="header">
+            <div class="header-left">
+                <h1>📋 FIZ1002 Sınav Organizasyonu</h1>
+                <div class="subtitle">Paylaşımlı Görev Takip Sistemi</div>
+            </div>
+            <div class="header-right">
+                <div class="progress-container">
+                    <div class="progress-text"><span id="completedCount">0</span>/<span id="totalCount">0</span> Görev Tamamlandı</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Çıkış</button>
+            </div>
+        </header>
+
+        <div class="controls" style="display:none;" id="controls">
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="vildan">Vildan</button>
+            <button class="filter-btn" data-filter="emre">Emre</button>
+            <button class="filter-btn" data-filter="mert">Mert</button>
+            <button class="filter-btn" data-filter="mesut">Mesut</button>
+            <button class="filter-btn" data-filter="pending">Bekleyenler</button>
+            <button class="filter-btn" data-filter="completed">Tamamlananlar</button>
+            <button class="reset-btn" onclick="resetAll()">Tüm İşaretleri Kaldır</button>
+        </div>
+
+        <div class="workflow" id="workflow" style="display:none;"></div>
+
+        <div class="note" style="display:none;" id="note">
+            <div class="note-title">⚠️ Önemli Not</div>
+            <div class="note-content">
+                Optik okuyucu takılma yaptığında cihaz zorlanmamalı ve elektrikli süpürge ile cihaz temizlenmelidir.
+            </div>
+        </div>
+    </div>
+
+    <div class="sync-indicator" id="syncIndicator">Senkronize ediliyor...</div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getDatabase, ref, set, onValue, get } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCWAi54-4awvqjY_VQSVjk3BqdQmQyhnrE",
+          authDomain: "fiz1002-checklist.firebaseapp.com",
+          databaseURL: "https://fiz1002-checklist-default-rtdb.europe-west1.firebasedatabase.app",
+          projectId: "fiz1002-checklist",
+          storageBucket: "fiz1002-checklist.firebasestorage.app",
+          messagingSenderId: "6921656537",
+          appId: "1:6921656537:web:285bda6c181ab8e78786c8",
+          measurementId: "G-YW5Y5L7EMC"
+        };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Password protection
+        const CORRECT_PASSWORD = 'fiz1002';
+
+        // Task definitions
+        const tasks = [
+            // Phase 1
+            { phase: 1, id: 'task-1', title: 'Sınıf Yerleşimi & Gözetmen Planlaması', desc: 'Kullanılacak sınıflar ve öğrenci sayıları belirlendikten sonra öğrencilerin sınıflara yerleştirilmesi ve gözetmen sayısının belirlenmesi', assignees: ['vildan'], icon: '📊' },
+            { phase: 1, id: 'task-2', title: 'Yoklama Listelerinin Hazırlanması', desc: 'Sınıfların öğrenci yoklama listelerinin hazırlanarak çıktılarının alınması', assignees: ['vildan'], icon: '📝' },
+            { phase: 1, id: 'task-3', title: 'Dış Görevli Dosyası', desc: 'Dış görevli dosyasının hazırlanması', assignees: ['emre'], icon: '📁' },
+            { phase: 1, id: 'task-4', title: 'Word Dosyası Koordinasyonu', desc: 'Word dosyasının ilgili bölümlere iletilmesi ve geri dönüşlerin takip edilip word dosyasına işlenmesi', assignees: ['emre'], icon: '📤' },
+            { phase: 1, id: 'task-5', title: 'Öğretim Üyesi Görevlendirmeleri', desc: 'Fizik bölümü öğretim üyelerinin görevli olacakları katların veya sorumlu olacakları sınıfların belirlenmesi', assignees: ['emre'], icon: '🏢' },
+            
+            // Phase 2
+            { phase: 2, id: 'task-6', title: 'Tutanak Hazırlığı', desc: 'Sınıfların sorumlu öğretim üyeleri ve gözetmenleri belli olduktan sonra tutanakların hazırlanması ve çıktılarının alınması', assignees: ['mert'], icon: '📋' },
+            { phase: 2, id: 'task-7', title: 'Zarf Etiketlemesi', desc: 'Büyük ve küçük zarfların üzerine ders dönemi, dersin kodu-adı, sınıf mevcudu ve sorumlu öğretim üyesinin isimi yazılması', assignees: ['mert'], icon: '✉️' },
+            { phase: 2, id: 'task-8', title: 'Soru Basımı', desc: 'Sınav sorularının basılması', assignees: ['emre', 'mert'], icon: '🖨️' },
+            { phase: 2, id: 'task-9', title: 'Son Kontrol', desc: 'Tutanakların, yoklama listelerinin ve soru kağıtlarının sınav gününden en az bir gün önce kontrol edilmesi', assignees: ['vildan', 'emre', 'mert'], icon: '✅' },
+            
+            // Phase 3
+            { phase: 3, id: 'task-10', title: 'Optik Okuma', desc: 'Cevap kağıtlarının optik okuyucuda okutulması ve excel haline getirilip bölüm başkanlığına iletilmesi', assignees: ['mesut'], icon: '🖥️' },
+            { phase: 3, id: 'task-11', title: 'İtiraz İncelemesi', desc: 'Sınav notuna itiraz eden öğrencilerin kağıtlarının yeniden incelenmesi', assignees: ['mesut'], icon: '🔍' },
+            { phase: 3, id: 'task-12', title: 'Arşivleme', desc: 'Optik okuma işlemi bittikten sonra sınav kağıtlarının arşivlenmesi için belirlenen dolaplara düzenli bir şekilde yerleştirilmesi', assignees: ['mesut'], icon: '📦' },
+            { phase: 3, id: 'task-13', title: 'Merkez Düzenlemesi', desc: 'Sınav organizasyon merkezinin düzenlenmesi ve bir sonraki sınav gününe hazır hale getirilmesi', assignees: ['mesut'], icon: '🔄' }
+        ];
+
+        const phases = [
+            { id: 1, title: '🎯 Faz 1: Ön Hazırlık & Planlama' },
+            { id: 2, title: '📄 Faz 2: Dokümantasyon & Materyal Hazırlığı' },
+            { id: 3, title: '🔄 Faz 3: Sınav Sonrası İşlemler' }
+        ];
+
+        let checklistData = {};
+        let currentFilter = 'all';
+        let isLoggedIn = false;
+
+        // Login handling
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                isLoggedIn = true;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').classList.add('show');
+                loadChecklist();
+            } else {
+                document.getElementById('errorMessage').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('errorMessage').classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        window.logout = function() {
+            isLoggedIn = false;
+            document.getElementById('loginScreen').style.display = 'block';
+            document.getElementById('mainApp').classList.remove('show');
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // Show sync indicator
+        function showSyncIndicator(status) {
+            const indicator = document.getElementById('syncIndicator');
+            indicator.className = 'sync-indicator show ' + status;
+            
+            if (status === 'syncing') {
+                indicator.textContent = '🔄 Senkronize ediliyor...';
+            } else if (status === 'synced') {
+                indicator.textContent = '✓ Senkronize edildi';
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        // Load checklist data from Firebase
+        async function loadChecklist() {
+            const checklistRef = ref(database, 'checklist');
+            
+            // Get initial data
+            const snapshot = await get(checklistRef);
+            if (snapshot.exists()) {
+                checklistData = snapshot.val();
+            } else {
+                // Initialize empty checklist
+                checklistData = {};
+                tasks.forEach(task => {
+                    checklistData[task.id] = false;
+                });
+                await set(checklistRef, checklistData);
+            }
+            
+            renderChecklist();
+            
+            // Listen for real-time updates
+            onValue(checklistRef, (snapshot) => {
+                if (isLoggedIn && snapshot.exists()) {
+                    checklistData = snapshot.val();
+                    renderChecklist();
+                }
+            });
+        }
+
+        // Save checklist data to Firebase
+        async function saveChecklist() {
+            showSyncIndicator('syncing');
+            const checklistRef = ref(database, 'checklist');
+            await set(checklistRef, checklistData);
+            showSyncIndicator('synced');
+        }
+
+        // Render the checklist
+        function renderChecklist() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('header').style.display = 'flex';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('workflow').style.display = 'grid';
+            document.getElementById('note').style.display = 'block';
+
+            const workflowEl = document.getElementById('workflow');
+            workflowEl.innerHTML = '';
+
+            phases.forEach(phase => {
+                const phaseTasks = tasks.filter(t => t.phase === phase.id);
+                const completedTasks = phaseTasks.filter(t => checklistData[t.id]).length;
+                
+                const phaseEl = document.createElement('div');
+                phaseEl.className = 'phase';
+                
+                phaseEl.innerHTML = `
+                    <div class="phase-header">
+                        <div class="phase-title">${phase.title}</div>
+                        <div class="phase-progress">${completedTasks}/${phaseTasks.length}</div>
+                    </div>
+                    <div class="tasks" id="phase-${phase.id}"></div>
+                `;
+                
+                workflowEl.appendChild(phaseEl);
+                
+                const tasksContainer = document.getElementById(`phase-${phase.id}`);
+                
+                phaseTasks.forEach(task => {
+                    if (shouldShowTask(task)) {
+                        const taskEl = createTaskElement(task);
+                        tasksContainer.appendChild(taskEl);
+                    }
+                });
+            });
+
+            updateProgress();
+        }
+
+        // Check if task should be shown based on current filter
+        function shouldShowTask(task) {
+            if (currentFilter === 'all') return true;
+            if (currentFilter === 'pending') return !checklistData[task.id];
+            if (currentFilter === 'completed') return checklistData[task.id];
+            return task.assignees.includes(currentFilter);
+        }
+
+        // Create task element
+        function createTaskElement(task) {
+            const div = document.createElement('div');
+            div.className = `task ${task.assignees[0]} ${checklistData[task.id] ? 'completed' : ''}`;
+            div.onclick = () => toggleTask(task.id);
+            
+            const assigneesHTML = task.assignees.map(a => 
+                `<span class="assignee ${a}">${a.toUpperCase()}</span>`
+            ).join('');
+            
+            div.innerHTML = `
+                <div class="task-checkbox"></div>
+                <div class="task-header">
+                    <div class="task-icon">${task.icon}</div>
+                    <div class="task-title">${task.title}</div>
+                </div>
+                <div class="task-description">${task.desc}</div>
+                <div class="task-footer">
+                    ${assigneesHTML}
+                </div>
+            `;
+            
+            return div;
+        }
+
+        // Toggle task completion
+        async function toggleTask(taskId) {
+            checklistData[taskId] = !checklistData[taskId];
+            await saveChecklist();
+            renderChecklist();
+        }
+
+        // Update progress
+        function updateProgress() {
+            const total = tasks.length;
+            const completed = Object.values(checklistData).filter(v => v).length;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        // Filter handling
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderChecklist();
+            });
+        });
+
+        // Reset all tasks
+        window.resetAll = async function() {
+            if (confirm('Tüm görevlerin işaretini kaldırmak istediğinizden emin misiniz?')) {
+                tasks.forEach(task => {
+                    checklistData[task.id] = false;
+                });
+                await saveChecklist();
+                renderChecklist();
+            }
+        }
+    </script>
+</body>
+</html>
