@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -581,408 +582,436 @@
     </div>
     <div class="container" id="mainApp">
         <div class="loading" id="loading">Yükleniyor...</div>
-        
-        <header style="display:none;" id="header">
-            <div class="header-left">
-                <h1 id="mainTitle">📋 FIZ1002 Sınav Organizasyonu
-                    <button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>
-                </h1>
-                <div class="subtitle">Paylaşımlı Görev Takip Sistemi</div>
-            </div>
-            <div class="header-right">
-                <div class="progress-container">
-                    <div class="progress-text"><span id="completedCount">0</span>/<span id="totalCount">0</span> Görev Tamamlandı</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
+
+```
+    <header style="display:none;" id="header">
+        <div class="header-left">
+            <h1 id="mainTitle">📋 FIZ1002 Sınav Organizasyonu
+                <button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>
+            </h1>
+            <div class="subtitle">Paylaşımlı Görev Takip Sistemi</div>
+        </div>
+        <div class="header-right">
+            <div class="progress-container">
+                <div class="progress-text"><span id="completedCount">0</span>/<span id="totalCount">0</span> Görev Tamamlandı</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
-                <button class="logout-btn" onclick="logout()">Çıkış</button>
             </div>
-        </header>
-        <div class="controls" style="display:none;" id="controls">
-            <button class="filter-btn active" data-filter="all">Tümü</button>
-            <button class="filter-btn" data-filter="vildan">Vildan</button>
-            <button class="filter-btn" data-filter="emre">Emre</button>
-            <button class="filter-btn" data-filter="mert">Mert</button>
-            <button class="filter-btn" data-filter="mesut">Mesut</button>
-            <button class="filter-btn" data-filter="pending">Bekleyenler</button>
-            <button class="filter-btn" data-filter="completed">Tamamlananlar</button>
-            <button class="reset-btn" onclick="resetAll()">Tüm İşaretleri Kaldır</button>
+            <button class="logout-btn" onclick="logout()">Çıkış</button>
         </div>
-        <div class="workflow" id="workflow" style="display:none;"></div>
-        <div class="note" style="display:none;" id="note">
-            <div class="note-title">⚠️ Önemli Not</div>
-            <div class="note-content">
-                Optik okuyucu takılma yaptığında cihaz zorlanmamalı ve elektrikli süpürge ile cihaz temizlenmelidir.
-            </div>
-        </div>
-        <div class="activity-log" style="display:none;" id="activityLog">
-            <div class="log-header">
-                <h3>📜 Aktivite Geçmişi</h3>
-                <button class="clear-log-btn" onclick="clearLog()">Geçmişi Temizle</button>
-            </div>
-            <div class="log-entries" id="logEntries">
-                <div class="log-empty">Henüz aktivite yok</div>
-            </div>
+    </header>
+    <div class="controls" style="display:none;" id="controls">
+        <button class="filter-btn active" data-filter="all">Tümü</button>
+        <button class="filter-btn" data-filter="vildan">Vildan</button>
+        <button class="filter-btn" data-filter="emre">Emre</button>
+        <button class="filter-btn" data-filter="mert">Mert</button>
+        <button class="filter-btn" data-filter="mesut">Mesut</button>
+        <button class="filter-btn" data-filter="pending">Bekleyenler</button>
+        <button class="filter-btn" data-filter="completed">Tamamlananlar</button>
+        <button class="reset-btn" onclick="resetAll()">Tüm İşaretleri Kaldır</button>
+    </div>
+    <div class="workflow" id="workflow" style="display:none;"></div>
+    <div class="note" style="display:none;" id="note">
+        <div class="note-title">⚠️ Önemli Not</div>
+        <div class="note-content">
+            Optik okuyucu takılma yaptığında cihaz zorlanmamalı ve elektrikli süpürge ile cihaz temizlenmelidir.
         </div>
     </div>
-    <div class="sync-indicator" id="syncIndicator">Senkronize ediliyor...</div>
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-        import { getDatabase, ref, set, onValue, get, push } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    <div class="activity-log" style="display:none;" id="activityLog">
+        <div class="log-header">
+            <h3>📜 Aktivite Geçmişi</h3>
+            <button class="clear-log-btn" onclick="clearLog()">Geçmişi Temizle</button>
+        </div>
+        <div class="log-entries" id="logEntries">
+            <div class="log-empty">Henüz aktivite yok</div>
+        </div>
+    </div>
+</div>
+<div class="sync-indicator" id="syncIndicator">Senkronize ediliyor...</div>
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getDatabase, ref, set, onValue, get, push } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWAi54-4awvqjY_VQSVjk3BqdQmQyhnrE",
+      authDomain: "fiz1002-checklist.firebaseapp.com",
+      databaseURL: "https://fiz1002-checklist-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "fiz1002-checklist",
+      storageBucket: "fiz1002-checklist.firebasestorage.app",
+      messagingSenderId: "6921656537",
+      appId: "1:6921656537:web:285bda6c181ab8e78786c8",
+      measurementId: "G-YW5Y5L7EMC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const CORRECT_PASSWORD = 'fiz1002';
+    const ADMIN_PASSWORD = 'admin1002'; // Yönetici şifresi - değiştirin!
+    
+    let isAdmin = false;
+    
+    const tasks = [
+        { phase: 1, id: 'task-1', title: 'Sınıf Yerleşimi & Gözetmen Planlaması', desc: 'Kullanılacak sınıflar ve öğrenci sayıları belirlendikten sonra öğrencilerin sınıflara yerleştirilmesi ve gözetmen sayısının belirlenmesi', assignees: ['vildan'], icon: '📊' },
+        { phase: 1, id: 'task-2', title: 'Yoklama Listelerinin Hazırlanması', desc: 'Sınıfların öğrenci yoklama listelerinin hazırlanarak çıktılarının alınması', assignees: ['vildan'], icon: '📝' },
+        { phase: 1, id: 'task-3', title: 'Dış Görevli Dosyası', desc: 'Dış görevli dosyasının hazırlanması', assignees: ['emre'], icon: '📁' },
+        { phase: 1, id: 'task-4', title: 'Word Dosyası Koordinasyonu', desc: 'Word dosyasının ilgili bölümlere iletilmesi ve geri dönüşlerin takip edilip word dosyasına işlenmesi', assignees: ['emre'], icon: '📤' },
+        { phase: 1, id: 'task-5', title: 'Öğretim Üyesi Görevlendirmeleri', desc: 'Fizik bölümü öğretim üyelerinin görevli olacakları katların veya sorumlu olacakları sınıfların belirlenmesi', assignees: ['emre'], icon: '🏢' },
+        { phase: 2, id: 'task-6', title: 'Tutanak Hazırlığı', desc: 'Sınıfların sorumlu öğretim üyeleri ve gözetmenleri belli olduktan sonra tutanakların hazırlanması ve çıktılarının alınması', assignees: ['mert'], icon: '📋' },
+        { phase: 2, id: 'task-7', title: 'Zarf Etiketlemesi', desc: 'Büyük ve küçük zarfların üzerine ders dönemi, dersin kodu-adı, sınıf mevcudu ve sorumlu öğretim üyesinin isimi yazılması', assignees: ['mert'], icon: '✉️' },
+        { phase: 2, id: 'task-8', title: 'Soru Basımı', desc: 'Sınav sorularının basılması', assignees: ['emre', 'mert'], icon: '🖨️' },
+        { phase: 2, id: 'task-9', title: 'Son Kontrol', desc: 'Tutanakların, yoklama listelerinin ve soru kağıtlarının sınav gününden en az bir gün önce kontrol edilmesi', assignees: ['vildan', 'emre', 'mert'], icon: '✅' },
+        { phase: 3, id: 'task-10', title: 'Optik Okuma', desc: 'Cevap kağıtlarının optik okuyucuda okutulması ve excel haline getirilip bölüm başkanlığına iletilmesi', assignees: ['mesut'], icon: '🖥️' },
+        { phase: 3, id: 'task-11', title: 'İtiraz İncelemesi', desc: 'Sınav notuna itiraz eden öğrencilerin kağıtlarının yeniden incelenmesi', assignees: ['mesut'], icon: '🔍' },
+        { phase: 3, id: 'task-12', title: 'Arşivleme', desc: 'Optik okuma işlemi bittikten sonra sınav kağıtlarının arşivlenmesi için belirlenen dolaplara düzenli bir şekilde yerleştirilmesi', assignees: ['mesut'], icon: '📦' },
+        { phase: 3, id: 'task-13', title: 'Merkez Düzenlemesi', desc: 'Sınav organizasyon merkezinin düzenlenmesi ve bir sonraki sınav gününe hazır hale getirilmesi', assignees: ['mesut'], icon: '🔄' }
+    ];
+
+    const phases = [
+        { id: 1, title: '🎯 Faz 1: Ön Hazırlık & Planlama' },
+        { id: 2, title: '📄 Faz 2: Dokümantasyon & Materyal Hazırlığı' },
+        { id: 3, title: '🔄 Faz 3: Sınav Sonrası İşlemler' }
+    ];
+
+    let checklistData = {};
+    let activityLog = [];
+    let examTitle = '📋 FIZ1002 Sınav Organizasyonu';
+    let currentFilter = 'all';
+    let isLoggedIn = false;
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = document.getElementById('passwordInput').value;
         
-        const firebaseConfig = {
-          apiKey: "AIzaSyCWAi54-4awvqjY_VQSVjk3BqdQmQyhnrE",
-          authDomain: "fiz1002-checklist.firebaseapp.com",
-          databaseURL: "https://fiz1002-checklist-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "fiz1002-checklist",
-          storageBucket: "fiz1002-checklist.firebasestorage.app",
-          messagingSenderId: "6921656537",
-          appId: "1:6921656537:web:285bda6c181ab8e78786c8",
-          measurementId: "G-YW5Y5L7EMC"
-        };
+        if (password === CORRECT_PASSWORD || password === ADMIN_PASSWORD) {
+            isLoggedIn = true;
+            isAdmin = (password === ADMIN_PASSWORD);
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').classList.add('show');
+            loadChecklist();
+        } else {
+            document.getElementById('errorMessage').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('errorMessage').classList.remove('show');
+            }, 3000);
+        }
+    });
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const CORRECT_PASSWORD = 'fiz1002';
+    window.logout = function() {
+        isLoggedIn = false;
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('mainApp').classList.remove('show');
+        document.getElementById('passwordInput').value = '';
+    }
+
+    window.editTitle = function() {
+        if (!isAdmin) {
+            alert('⛔ Bu işlem için yönetici yetkisi gerekiyor!');
+            return;
+        }
+        const newTitle = prompt('Yeni başlık girin:', examTitle.replace('📋 ', ''));
+        if (newTitle && newTitle.trim()) {
+            examTitle = '📋 ' + newTitle.trim();
+            document.getElementById('mainTitle').innerHTML = examTitle + '<button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>';
+            saveTitle();
+            addLog('Başlık değiştirildi', `Yeni başlık: ${newTitle}`);
+        }
+    }
+
+    async function saveTitle() {
+        const titleRef = ref(database, 'examTitle');
+        await set(titleRef, examTitle);
+    }
+
+    async function loadTitle() {
+        const titleRef = ref(database, 'examTitle');
+        const snapshot = await get(titleRef);
+        if (snapshot.exists()) {
+            examTitle = snapshot.val();
+            document.getElementById('mainTitle').innerHTML = examTitle + '<button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>';
+        }
+    }
+
+    function showSyncIndicator(status) {
+        const indicator = document.getElementById('syncIndicator');
+        indicator.className = 'sync-indicator show ' + status;
         
-        const tasks = [
-            { phase: 1, id: 'task-1', title: 'Sınıf Yerleşimi & Gözetmen Planlaması', desc: 'Kullanılacak sınıflar ve öğrenci sayıları belirlendikten sonra öğrencilerin sınıflara yerleştirilmesi ve gözetmen sayısının belirlenmesi', assignees: ['vildan'], icon: '📊' },
-            { phase: 1, id: 'task-2', title: 'Yoklama Listelerinin Hazırlanması', desc: 'Sınıfların öğrenci yoklama listelerinin hazırlanarak çıktılarının alınması', assignees: ['vildan'], icon: '📝' },
-            { phase: 1, id: 'task-3', title: 'Dış Görevli Dosyası', desc: 'Dış görevli dosyasının hazırlanması', assignees: ['emre'], icon: '📁' },
-            { phase: 1, id: 'task-4', title: 'Word Dosyası Koordinasyonu', desc: 'Word dosyasının ilgili bölümlere iletilmesi ve geri dönüşlerin takip edilip word dosyasına işlenmesi', assignees: ['emre'], icon: '📤' },
-            { phase: 1, id: 'task-5', title: 'Öğretim Üyesi Görevlendirmeleri', desc: 'Fizik bölümü öğretim üyelerinin görevli olacakları katların veya sorumlu olacakları sınıfların belirlenmesi', assignees: ['emre'], icon: '🏢' },
-            { phase: 2, id: 'task-6', title: 'Tutanak Hazırlığı', desc: 'Sınıfların sorumlu öğretim üyeleri ve gözetmenleri belli olduktan sonra tutanakların hazırlanması ve çıktılarının alınması', assignees: ['mert'], icon: '📋' },
-            { phase: 2, id: 'task-7', title: 'Zarf Etiketlemesi', desc: 'Büyük ve küçük zarfların üzerine ders dönemi, dersin kodu-adı, sınıf mevcudu ve sorumlu öğretim üyesinin isimi yazılması', assignees: ['mert'], icon: '✉️' },
-            { phase: 2, id: 'task-8', title: 'Soru Basımı', desc: 'Sınav sorularının basılması', assignees: ['emre', 'mert'], icon: '🖨️' },
-            { phase: 2, id: 'task-9', title: 'Son Kontrol', desc: 'Tutanakların, yoklama listelerinin ve soru kağıtlarının sınav gününden en az bir gün önce kontrol edilmesi', assignees: ['vildan', 'emre', 'mert'], icon: '✅' },
-            { phase: 3, id: 'task-10', title: 'Optik Okuma', desc: 'Cevap kağıtlarının optik okuyucuda okutulması ve excel haline getirilip bölüm başkanlığına iletilmesi', assignees: ['mesut'], icon: '🖥️' },
-            { phase: 3, id: 'task-11', title: 'İtiraz İncelemesi', desc: 'Sınav notuna itiraz eden öğrencilerin kağıtlarının yeniden incelenmesi', assignees: ['mesut'], icon: '🔍' },
-            { phase: 3, id: 'task-12', title: 'Arşivleme', desc: 'Optik okuma işlemi bittikten sonra sınav kağıtlarının arşivlenmesi için belirlenen dolaplara düzenli bir şekilde yerleştirilmesi', assignees: ['mesut'], icon: '📦' },
-            { phase: 3, id: 'task-13', title: 'Merkez Düzenlemesi', desc: 'Sınav organizasyon merkezinin düzenlenmesi ve bir sonraki sınav gününe hazır hale getirilmesi', assignees: ['mesut'], icon: '🔄' }
-        ];
+        if (status === 'syncing') {
+            indicator.textContent = '🔄 Senkronize ediliyor...';
+        } else if (status === 'synced') {
+            indicator.textContent = '✓ Senkronize edildi';
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+    }
 
-        const phases = [
-            { id: 1, title: '🎯 Faz 1: Ön Hazırlık & Planlama' },
-            { id: 2, title: '📄 Faz 2: Dokümantasyon & Materyal Hazırlığı' },
-            { id: 3, title: '🔄 Faz 3: Sınav Sonrası İşlemler' }
-        ];
+    async function loadChecklist() {
+        const checklistRef = ref(database, 'checklist');
+        const logRef = ref(database, 'activityLog');
+        
+        await loadTitle();
+        
+        const snapshot = await get(checklistRef);
+        if (snapshot.exists()) {
+            checklistData = snapshot.val();
+        } else {
+            checklistData = {};
+            tasks.forEach(task => {
+                checklistData[task.id] = false;
+            });
+            await set(checklistRef, checklistData);
+        }
 
-        let checklistData = {};
-        let activityLog = [];
-        let examTitle = '📋 FIZ1002 Sınav Organizasyonu';
-        let currentFilter = 'all';
-        let isLoggedIn = false;
-
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const password = document.getElementById('passwordInput').value;
-            
-            if (password === CORRECT_PASSWORD) {
-                isLoggedIn = true;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').classList.add('show');
-                loadChecklist();
-            } else {
-                document.getElementById('errorMessage').classList.add('show');
-                setTimeout(() => {
-                    document.getElementById('errorMessage').classList.remove('show');
-                }, 3000);
+        const logSnapshot = await get(logRef);
+        if (logSnapshot.exists()) {
+            activityLog = Object.values(logSnapshot.val());
+        }
+        
+        renderChecklist();
+        renderActivityLog();
+        
+        onValue(checklistRef, (snapshot) => {
+            if (isLoggedIn && snapshot.exists()) {
+                const newData = snapshot.val();
+                const oldData = {...checklistData};
+                checklistData = newData;
+                updateChangedTasks(oldData, newData);
             }
         });
 
-        window.logout = function() {
-            isLoggedIn = false;
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('mainApp').classList.remove('show');
-            document.getElementById('passwordInput').value = '';
-        }
-
-        window.editTitle = function() {
-            const newTitle = prompt('Yeni başlık girin:', examTitle.replace('📋 ', ''));
-            if (newTitle && newTitle.trim()) {
-                examTitle = '📋 ' + newTitle.trim();
-                document.getElementById('mainTitle').innerHTML = examTitle + '<button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>';
-                saveTitle();
-                addLog('Başlık değiştirildi', `Yeni başlık: ${newTitle}`);
-            }
-        }
-
-        async function saveTitle() {
-            const titleRef = ref(database, 'examTitle');
-            await set(titleRef, examTitle);
-        }
-
-        async function loadTitle() {
-            const titleRef = ref(database, 'examTitle');
-            const snapshot = await get(titleRef);
-            if (snapshot.exists()) {
-                examTitle = snapshot.val();
-                document.getElementById('mainTitle').innerHTML = examTitle + '<button class="edit-title-btn" onclick="editTitle()">✏️ Düzenle</button>';
-            }
-        }
-
-        function showSyncIndicator(status) {
-            const indicator = document.getElementById('syncIndicator');
-            indicator.className = 'sync-indicator show ' + status;
-            
-            if (status === 'syncing') {
-                indicator.textContent = '🔄 Senkronize ediliyor...';
-            } else if (status === 'synced') {
-                indicator.textContent = '✓ Senkronize edildi';
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                }, 2000);
-            }
-        }
-
-        async function loadChecklist() {
-            const checklistRef = ref(database, 'checklist');
-            const logRef = ref(database, 'activityLog');
-            
-            await loadTitle();
-            
-            const snapshot = await get(checklistRef);
-            if (snapshot.exists()) {
-                checklistData = snapshot.val();
-            } else {
-                checklistData = {};
-                tasks.forEach(task => {
-                    checklistData[task.id] = false;
-                });
-                await set(checklistRef, checklistData);
-            }
-
-            const logSnapshot = await get(logRef);
-            if (logSnapshot.exists()) {
-                activityLog = Object.values(logSnapshot.val());
-            }
-            
-            renderChecklist();
-            renderActivityLog();
-            
-            onValue(checklistRef, (snapshot) => {
-                if (isLoggedIn && snapshot.exists()) {
-                    const newData = snapshot.val();
-                    const oldData = {...checklistData};
-                    checklistData = newData;
-                    updateChangedTasks(oldData, newData);
-                }
-            });
-
-            onValue(logRef, (snapshot) => {
-                if (isLoggedIn && snapshot.exists()) {
-                    activityLog = Object.values(snapshot.val());
-                    renderActivityLog();
-                }
-            });
-        }
-
-        function updateChangedTasks(oldData, newData) {
-            for (const taskId in newData) {
-                if (oldData[taskId] !== newData[taskId]) {
-                    const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
-                    if (taskEl) {
-                        if (newData[taskId]) {
-                            taskEl.classList.add('completed');
-                        } else {
-                            taskEl.classList.remove('completed');
-                        }
-                    }
-                }
-            }
-            updateProgress();
-            updatePhaseProgress();
-        }
-
-        async function saveChecklist() {
-            showSyncIndicator('syncing');
-            const checklistRef = ref(database, 'checklist');
-            await set(checklistRef, checklistData);
-            showSyncIndicator('synced');
-        }
-
-        async function addLog(action, details) {
-            const logRef = ref(database, 'activityLog');
-            const timestamp = new Date().toLocaleString('tr-TR');
-            await push(logRef, {
-                action,
-                details,
-                timestamp,
-                time: Date.now()
-            });
-        }
-
-        window.clearLog = async function() {
-            if (confirm('Tüm aktivite geçmişini silmek istediğinizden emin misiniz?')) {
-                const logRef = ref(database, 'activityLog');
-                await set(logRef, {});
-                activityLog = [];
+        onValue(logRef, (snapshot) => {
+            if (isLoggedIn && snapshot.exists()) {
+                activityLog = Object.values(snapshot.val());
                 renderActivityLog();
             }
-        }
+        });
+    }
 
-        function renderActivityLog() {
-            const logContainer = document.getElementById('logEntries');
-            
-            if (activityLog.length === 0) {
-                logContainer.innerHTML = '<div class="log-empty">Henüz aktivite yok</div>';
-                return;
-            }
-
-            const sortedLog = [...activityLog].sort((a, b) => b.time - a.time);
-            
-            logContainer.innerHTML = sortedLog.slice(0, 50).map(log => `
-                <div class="log-entry">
-                    <div class="log-icon">${getLogIcon(log.action)}</div>
-                    <div class="log-content">
-                        <div class="log-action">${log.action}</div>
-                        <div class="log-time">${log.timestamp} - ${log.details}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getLogIcon(action) {
-            if (action.includes('Tamamlandı')) return '✅';
-            if (action.includes('Geri alındı')) return '↩️';
-            if (action.includes('Sıfırlandı')) return '🔄';
-            if (action.includes('Başlık')) return '✏️';
-            return '📝';
-        }
-
-        function renderChecklist() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('header').style.display = 'flex';
-            document.getElementById('controls').style.display = 'flex';
-            document.getElementById('workflow').style.display = 'grid';
-            document.getElementById('note').style.display = 'block';
-            document.getElementById('activityLog').style.display = 'block';
-
-            const workflowEl = document.getElementById('workflow');
-            workflowEl.innerHTML = '';
-
-            phases.forEach(phase => {
-                const phaseTasks = tasks.filter(t => t.phase === phase.id);
-                const completedTasks = phaseTasks.filter(t => checklistData[t.id]).length;
-                
-                const phaseEl = document.createElement('div');
-                phaseEl.className = 'phase';
-                
-                phaseEl.innerHTML = `
-                    <div class="phase-header">
-                        <div class="phase-title">${phase.title}</div>
-                        <div class="phase-progress" data-phase="${phase.id}">${completedTasks}/${phaseTasks.length}</div>
-                    </div>
-                    <div class="tasks" id="phase-${phase.id}"></div>
-                `;
-                
-                workflowEl.appendChild(phaseEl);
-                
-                const tasksContainer = document.getElementById(`phase-${phase.id}`);
-                
-                phaseTasks.forEach(task => {
-                    if (shouldShowTask(task)) {
-                        const taskEl = createTaskElement(task);
-                        tasksContainer.appendChild(taskEl);
+    function updateChangedTasks(oldData, newData) {
+        for (const taskId in newData) {
+            if (oldData[taskId] !== newData[taskId]) {
+                const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
+                if (taskEl) {
+                    if (newData[taskId]) {
+                        taskEl.classList.add('completed');
+                    } else {
+                        taskEl.classList.remove('completed');
                     }
-                });
-            });
+                }
+            }
+        }
+        updateProgress();
+        updatePhaseProgress();
+    }
 
-            updateProgress();
+    async function saveChecklist() {
+        showSyncIndicator('syncing');
+        const checklistRef = ref(database, 'checklist');
+        await set(checklistRef, checklistData);
+        showSyncIndicator('synced');
+    }
+
+    async function addLog(action, details) {
+        const logRef = ref(database, 'activityLog');
+        const timestamp = new Date().toLocaleString('tr-TR');
+        await push(logRef, {
+            action,
+            details,
+            timestamp,
+            time: Date.now()
+        });
+    }
+
+    window.clearLog = async function() {
+        if (!isAdmin) {
+            alert('⛔ Bu işlem için yönetici yetkisi gerekiyor!');
+            return;
+        }
+        if (confirm('Tüm aktivite geçmişini silmek istediğinizden emin misiniz?')) {
+            const logRef = ref(database, 'activityLog');
+            await set(logRef, {});
+            activityLog = [];
+            renderActivityLog();
+        }
+    }
+
+    function renderActivityLog() {
+        const logContainer = document.getElementById('logEntries');
+        
+        if (activityLog.length === 0) {
+            logContainer.innerHTML = '<div class="log-empty">Henüz aktivite yok</div>';
+            return;
         }
 
-        function shouldShowTask(task) {
-            if (currentFilter === 'all') return true;
-            if (currentFilter === 'pending') return !checklistData[task.id];
-            if (currentFilter === 'completed') return checklistData[task.id];
-            return task.assignees.includes(currentFilter);
+        const sortedLog = [...activityLog].sort((a, b) => b.time - a.time);
+        
+        logContainer.innerHTML = sortedLog.slice(0, 50).map(log => `
+            <div class="log-entry">
+                <div class="log-icon">${getLogIcon(log.action)}</div>
+                <div class="log-content">
+                    <div class="log-action">${log.action}</div>
+                    <div class="log-time">${log.timestamp} - ${log.details}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getLogIcon(action) {
+        if (action.includes('Tamamlandı')) return '✅';
+        if (action.includes('Geri alındı')) return '↩️';
+        if (action.includes('Sıfırlandı')) return '🔄';
+        if (action.includes('Başlık')) return '✏️';
+        return '📝';
+    }
+
+    function renderChecklist() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('header').style.display = 'flex';
+        document.getElementById('controls').style.display = 'flex';
+        document.getElementById('workflow').style.display = 'grid';
+        document.getElementById('note').style.display = 'block';
+        document.getElementById('activityLog').style.display = 'block';
+
+        // Show admin badge if user is admin
+        if (isAdmin && !document.getElementById('adminBadge')) {
+            const badge = document.createElement('span');
+            badge.id = 'adminBadge';
+            badge.style.cssText = 'background: #e74c3c; color: white; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; margin-left: 15px;';
+            badge.textContent = '👑 YÖNETİCİ';
+            document.querySelector('.header-left h1').appendChild(badge);
         }
 
-        function createTaskElement(task) {
-            const div = document.createElement('div');
-            div.className = `task ${task.assignees[0]} ${checklistData[task.id] ? 'completed' : ''}`;
-            div.setAttribute('data-task-id', task.id);
-            div.onclick = () => toggleTask(task.id);
+        const workflowEl = document.getElementById('workflow');
+        workflowEl.innerHTML = '';
+
+        phases.forEach(phase => {
+            const phaseTasks = tasks.filter(t => t.phase === phase.id);
+            const completedTasks = phaseTasks.filter(t => checklistData[t.id]).length;
             
-            const assigneesHTML = task.assignees.map(a => 
-                `<span class="assignee ${a}">${a.toUpperCase()}</span>`
-            ).join('');
+            const phaseEl = document.createElement('div');
+            phaseEl.className = 'phase';
             
-            div.innerHTML = `
-                <div class="task-checkbox"></div>
-                <div class="task-header">
-                    <div class="task-icon">${task.icon}</div>
-                    <div class="task-title">${task.title}</div>
+            phaseEl.innerHTML = `
+                <div class="phase-header">
+                    <div class="phase-title">${phase.title}</div>
+                    <div class="phase-progress" data-phase="${phase.id}">${completedTasks}/${phaseTasks.length}</div>
                 </div>
-                <div class="task-description">${task.desc}</div>
-                <div class="task-footer">
-                    ${assigneesHTML}
-                </div>
+                <div class="tasks" id="phase-${phase.id}"></div>
             `;
             
-            return div;
-        }
-
-        async function toggleTask(taskId) {
-            const task = tasks.find(t => t.id === taskId);
-            const wasCompleted = checklistData[taskId];
-            checklistData[taskId] = !checklistData[taskId];
+            workflowEl.appendChild(phaseEl);
             
-            const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
-            if (checklistData[taskId]) {
-                taskEl.classList.add('completed');
-                await addLog('✅ Görev Tamamlandı', task.title);
-            } else {
-                taskEl.classList.remove('completed');
-                await addLog('↩️ Görev Geri Alındı', task.title);
-            }
+            const tasksContainer = document.getElementById(`phase-${phase.id}`);
             
-            await saveChecklist();
-            updateProgress();
-            updatePhaseProgress();
-        }
-
-        function updateProgress() {
-            const total = tasks.length;
-            const completed = Object.values(checklistData).filter(v => v).length;
-            const percentage = (completed / total) * 100;
-            
-            document.getElementById('completedCount').textContent = completed;
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('progressFill').style.width = percentage + '%';
-        }
-
-        function updatePhaseProgress() {
-            phases.forEach(phase => {
-                const phaseTasks = tasks.filter(t => t.phase === phase.id);
-                const completedTasks = phaseTasks.filter(t => checklistData[t.id]).length;
-                const progressEl = document.querySelector(`[data-phase="${phase.id}"]`);
-                if (progressEl) {
-                    progressEl.textContent = `${completedTasks}/${phaseTasks.length}`;
+            phaseTasks.forEach(task => {
+                if (shouldShowTask(task)) {
+                    const taskEl = createTaskElement(task);
+                    tasksContainer.appendChild(taskEl);
                 }
-            });
-        }
-
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentFilter = btn.dataset.filter;
-                renderChecklist();
             });
         });
 
-        window.resetAll = async function() {
-            if (confirm('Tüm görevlerin işaretini kaldırmak istediğinizden emin misiniz?')) {
-                tasks.forEach(task => {
-                    checklistData[task.id] = false;
-                });
-                await saveChecklist();
-                await addLog('🔄 Tüm Görevler Sıfırlandı', 'Tüm işaretler kaldırıldı');
-                renderChecklist();
-            }
+        updateProgress();
+    }
+
+    function shouldShowTask(task) {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'pending') return !checklistData[task.id];
+        if (currentFilter === 'completed') return checklistData[task.id];
+        return task.assignees.includes(currentFilter);
+    }
+
+    function createTaskElement(task) {
+        const div = document.createElement('div');
+        div.className = `task ${task.assignees[0]} ${checklistData[task.id] ? 'completed' : ''}`;
+        div.setAttribute('data-task-id', task.id);
+        div.onclick = () => toggleTask(task.id);
+        
+        const assigneesHTML = task.assignees.map(a => 
+            `<span class="assignee ${a}">${a.toUpperCase()}</span>`
+        ).join('');
+        
+        div.innerHTML = `
+            <div class="task-checkbox"></div>
+            <div class="task-header">
+                <div class="task-icon">${task.icon}</div>
+                <div class="task-title">${task.title}</div>
+            </div>
+            <div class="task-description">${task.desc}</div>
+            <div class="task-footer">
+                ${assigneesHTML}
+            </div>
+        `;
+        
+        return div;
+    }
+
+    async function toggleTask(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        const wasCompleted = checklistData[taskId];
+        checklistData[taskId] = !checklistData[taskId];
+        
+        const taskEl = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (checklistData[taskId]) {
+            taskEl.classList.add('completed');
+            await addLog('✅ Görev Tamamlandı', task.title);
+        } else {
+            taskEl.classList.remove('completed');
+            await addLog('↩️ Görev Geri Alındı', task.title);
         }
-    </script>
+        
+        await saveChecklist();
+        updateProgress();
+        updatePhaseProgress();
+    }
+
+    function updateProgress() {
+        const total = tasks.length;
+        const completed = Object.values(checklistData).filter(v => v).length;
+        const percentage = (completed / total) * 100;
+        
+        document.getElementById('completedCount').textContent = completed;
+        document.getElementById('totalCount').textContent = total;
+        document.getElementById('progressFill').style.width = percentage + '%';
+    }
+
+    function updatePhaseProgress() {
+        phases.forEach(phase => {
+            const phaseTasks = tasks.filter(t => t.phase === phase.id);
+            const completedTasks = phaseTasks.filter(t => checklistData[t.id]).length;
+            const progressEl = document.querySelector(`[data-phase="${phase.id}"]`);
+            if (progressEl) {
+                progressEl.textContent = `${completedTasks}/${phaseTasks.length}`;
+            }
+        });
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            renderChecklist();
+        });
+    });
+
+    window.resetAll = async function() {
+        if (!isAdmin) {
+            alert('⛔ Bu işlem için yönetici yetkisi gerekiyor!');
+            return;
+        }
+        if (confirm('Tüm görevlerin işaretini kaldırmak istediğinizden emin misiniz?')) {
+            tasks.forEach(task => {
+                checklistData[task.id] = false;
+            });
+            await saveChecklist();
+            await addLog('🔄 Tüm Görevler Sıfırlandı', 'Tüm işaretler kaldırıldı');
+            renderChecklist();
+        }
+    }
+</script>
+```
+
 </body>
 </html>
