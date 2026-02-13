@@ -1015,10 +1015,6 @@
     });
 
     window.resetAll = async function() {
-        if (!isAdmin) {
-            alert('⛔ Bu işlem için yönetici yetkisi gerekiyor!');
-            return;
-        }
         if (confirm('Tüm görevlerin işaretini kaldırmak istediğinizden emin misiniz?')) {
             tasks.forEach(task => {
                 checklistData[task.id] = false;
